@@ -1,11 +1,11 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
-import { QuestionService } from './question.service';
-import { CreateQuestionDto } from './dto/create-question.dto';
-import { UpdateQuestionDto } from './dto/update-question.dto';
-import { QuestionEntity } from './entities/question.entity';
+import { QuestionService } from '../services/question.service';
+import { CreateQuestionDto } from '../dto/create-question.dto';
+import { UpdateQuestionDto } from '../dto/update-question.dto';
+import { QuestionEntity } from '../entities/question.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { AppRequest } from '../shared/types/app-request.type';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AppRequest } from '../../shared/types/app-request.type';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @Controller('questions')
 @UseGuards(JwtAuthGuard)

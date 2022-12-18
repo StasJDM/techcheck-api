@@ -4,35 +4,34 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  JoinTable,
+  JoinColumn,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ThemeEntity } from './theme.entity';
+import { QuestionEntity } from './question.entity';
 
-@Entity('question')
-export class QuestionEntity {
+@Entity('theme')
+export class ThemeEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  question: string;
+  @Column({ unique: true })
+  title: string;
 
   @Column({ nullable: true })
-  answer?: string;
+  description?: string;
 
   @Column({ type: 'uuid' })
   creatorId: string;
 
   @ManyToOne(() => User)
-  @JoinTable()
+  @JoinColumn({ name: 'creator_id' })
   creator: User;
 
-  @ManyToMany(() => ThemeEntity, (theme) => theme.questions)
-  @JoinTable()
-  themes: ThemeEntity[];
+  @ManyToMany(() => QuestionEntity, (question) => question.themes)
+  questions: QuestionEntity[];
 
   @CreateDateColumn()
   createdAt: Date;

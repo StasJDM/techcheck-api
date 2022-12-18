@@ -1,12 +1,13 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { USER_TABLE_NAME } from './1658954315540-CreateUserTable';
 
-export const USER_TABLE_NAME = 'user';
+export const QUESTION_TABLE_NAME = 'question';
 
-export class CreateUserTable1658954315540 implements MigrationInterface {
+export class CreateQuestionTable1671382531318 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: USER_TABLE_NAME,
+        name: QUESTION_TABLE_NAME,
         columns: [
           {
             name: 'id',
@@ -17,43 +18,17 @@ export class CreateUserTable1658954315540 implements MigrationInterface {
             default: 'uuid_generate_v4()',
           },
           {
-            name: 'username',
-            type: 'varchar',
-            length: '320',
-            isUnique: true,
-          },
-          {
-            name: 'email',
-            type: 'varchar',
-            length: '320',
-            isUnique: true,
-          },
-          {
-            name: 'password',
+            name: 'question',
             type: 'varchar',
           },
           {
-            name: 'name',
+            name: 'answer',
             type: 'varchar',
-            length: '200',
             isNullable: true,
           },
           {
-            name: 'surname',
-            type: 'varchar',
-            length: '200',
-            isNullable: true,
-          },
-          {
-            name: 'gender',
-            type: 'enum',
-            enum: ['male', 'female', 'other'],
-            isNullable: true,
-          },
-          {
-            name: 'date_of_birth',
-            type: 'date',
-            isNullable: true,
+            name: 'creator_id',
+            type: 'uuid',
           },
           {
             name: 'created_at',
@@ -72,11 +47,18 @@ export class CreateUserTable1658954315540 implements MigrationInterface {
             isNullable: true,
           },
         ],
+        foreignKeys: [
+          {
+            columnNames: ['creator_id'],
+            referencedTableName: USER_TABLE_NAME,
+            referencedColumnNames: ['id'],
+          },
+        ],
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable(USER_TABLE_NAME);
+    await queryRunner.dropTable(QUESTION_TABLE_NAME);
   }
 }

@@ -2,6 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
 import { DataSource } from 'typeorm';
 import { join } from 'path';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 config();
 
@@ -16,4 +17,5 @@ export default new DataSource({
   database: configService.get('POSTGRES_DB'),
   entities: [join(__dirname, '../**', '*.entity.{ts,js}')],
   migrations: [join(__dirname, '../migrations/*.ts')],
+  namingStrategy: new SnakeNamingStrategy(),
 });

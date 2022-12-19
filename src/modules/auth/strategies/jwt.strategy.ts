@@ -8,7 +8,7 @@ import { User } from '../../user/entities/user.entity';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private configService: ConfigService) {
-    const jwtSecret = configService.get<string>(AppConfig.JWTSecret);
+    const jwtSecret = configService.get<string>(AppConfig.JWT_SECRET);
 
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

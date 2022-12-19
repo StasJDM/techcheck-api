@@ -6,6 +6,9 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { QuestionModule } from './modules/question/question.module';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { AppConfig } from './modules/shared/types/app-config.type';
 
 @Module({
   imports: [
@@ -18,13 +21,21 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get('POSTGRES_HOST'),
-        port: configService.get('POSTGRES_PORT'),
-        username: configService.get('POSTGRES_USER'),
-        password: configService.get('POSTGRES_PASSWORD'),
-        database: configService.get('POSTGRES_DB'),
+        host: configService.get(AppConfig.POSTGRES_HOST),
+        port: configService.get(AppConfig.POSTGRES_PORT),
+        username: configService.get(AppConfig.POSTGRES_USER),
+        password: configService.get(AppConfig.POSTGRES_PASSWORD),
+        database: configService.get(AppConfig.POSTGRES_DB),
         autoLoadEntities: true,
         namingStrategy: new SnakeNamingStrategy(),
+      }),
+    }),
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        ttl: configService.get(AppConfig.RATE_LIMITER_TTL),
+        limit: configService.get(AppConfig.RATE_LIMITER_LIMIT),
       }),
     }),
     UserModule,
@@ -33,6 +44,11 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
     QuestionModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

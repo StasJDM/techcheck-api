@@ -15,9 +15,9 @@ import { AppConfig } from '../shared/types/app-config.type';
     PassportModule,
     JwtModule.registerAsync({
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get(AppConfig.JWTSecret),
+        secret: configService.get(AppConfig.JWT_SECRET),
         signOptions: {
-          expiresIn: configService.get(AppConfig.JWTExp),
+          expiresIn: configService.get(AppConfig.JWT_EXP),
         },
       }),
       inject: [ConfigService],

@@ -73,7 +73,7 @@ export class AuthService {
   }
 
   async generateHash(password: string): Promise<string> {
-    const hashRounds = Number(this.configService.get<number>(AppConfig.HashRounds));
+    const hashRounds = Number(this.configService.get<number>(AppConfig.HASH_ROUNDS));
 
     const salt = await bcrypt.genSalt(hashRounds);
     const hash = await bcrypt.hash(password, salt);

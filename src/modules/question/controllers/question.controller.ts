@@ -6,6 +6,8 @@ import { QuestionEntity } from '../entities/question.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { AppRequest } from '../../shared/types/app-request.type';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { AddThemeToQuestionDto } from '../dto/add-theme-to-question.dto';
+import { RemoveThemeFromQuestionDto } from '../dto/remove-theme-from-question.dto';
 
 @Controller('questions')
 @UseGuards(JwtAuthGuard)
@@ -41,5 +43,21 @@ export class QuestionController {
   @Delete(':id')
   public remove(@Param('id') id: string): Promise<DeleteResult> {
     return this.questionService.remove(id);
+  }
+
+  @Post(':questionId/themes')
+  public addThemeToQuestion(
+    @Param('questionId') questionId: string,
+    @Body() addThemeToQuestionDto: AddThemeToQuestionDto,
+  ): Promise<void> {
+    return this.questionService.addThemeToQuestion(questionId, addThemeToQuestionDto.id);
+  }
+
+  @Delete(':questionId/themes')
+  public removeThemeFromQuestion(
+    @Param('questionId') questionId: string,
+    @Body() removeThemeFromQuestionDto: RemoveThemeFromQuestionDto,
+  ): Promise<void> {
+    return this.questionService.removeThemeFromQuestion(questionId, removeThemeFromQuestionDto.id);
   }
 }

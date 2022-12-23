@@ -11,6 +11,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ThemeEntity } from './theme.entity';
+import { THEME_QUESTION_TABLE } from 'src/migrations/1671401833260-CreateThemeQuestionTable';
 
 @Entity('question')
 export class QuestionEntity {
@@ -31,7 +32,7 @@ export class QuestionEntity {
   creator: User;
 
   @ManyToMany(() => ThemeEntity, (theme) => theme.questions)
-  @JoinTable()
+  @JoinTable({ name: THEME_QUESTION_TABLE })
   themes: ThemeEntity[];
 
   @CreateDateColumn()

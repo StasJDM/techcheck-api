@@ -18,7 +18,7 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async validateUser(username: string, password: string): Promise<Partial<User>> {
+  public async validateUser(username: string, password: string): Promise<Partial<User>> {
     const user = await this.userService.findByUsernameOrEmail(username);
 
     if (!user) {
@@ -27,6 +27,7 @@ export class AuthService {
 
     const isMatchPassword = await bcrypt.compare(password, user.password);
     if (isMatchPassword) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
       return result;
     }
@@ -34,13 +35,13 @@ export class AuthService {
     return null;
   }
 
-  async login(user: User): Promise<{ accessToken: string }> {
+  public async login(user: User): Promise<{ accessToken: string }> {
     const payload = { id: user.id, username: user.username };
 
     return { accessToken: this.jwtService.sign(payload) };
   }
 
-  async register(registerUserDto: RegisterUserDto): Promise<ReturnUserDto> {
+  public async register(registerUserDto: RegisterUserDto): Promise<ReturnUserDto> {
     const hash = await this.generateHash(registerUserDto.password);
 
     const user = await this.userService.create({
@@ -51,7 +52,7 @@ export class AuthService {
     return new ReturnUserDto(user);
   }
 
-  async changePassword(id: string, changePasswordDto: ChangePasswordDto): Promise<ResultDto> {
+  public async changePassword(id: string, changePasswordDto: ChangePasswordDto): Promise<ResultDto> {
     const user = await this.userService.findById(id);
 
     const isMatchOldPassword = await bcrypt.compare(changePasswordDto.oldPassword, user.password);
@@ -72,7 +73,7 @@ export class AuthService {
     };
   }
 
-  async generateHash(password: string): Promise<string> {
+  public async generateHash(password: string): Promise<string> {
     const hashRounds = Number(this.configService.get<number>(AppConfig.HASH_ROUNDS));
 
     const salt = await bcrypt.genSalt(hashRounds);

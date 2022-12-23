@@ -31,7 +31,7 @@ export class AuthController {
   @ApiResponse({ type: TokenDto })
   @Post('login')
   @UseGuards(LocalAuthGuard)
-  async login(@Req() req: AppRequest): Promise<TokenDto> {
+  public async login(@Req() req: AppRequest): Promise<TokenDto> {
     return this.authService.login(req.user);
   }
 
@@ -40,7 +40,7 @@ export class AuthController {
   @ApiResponse({ type: ReturnUserDto })
   @UseInterceptors(ClassSerializerInterceptor)
   @Post('register')
-  async register(@Body() registerUserDto: RegisterUserDto): Promise<User> {
+  public async register(@Body() registerUserDto: RegisterUserDto): Promise<User> {
     return this.authService.register(registerUserDto);
   }
 
@@ -49,7 +49,7 @@ export class AuthController {
   @ApiResponse({ type: ResultDto })
   @UseGuards(JwtAuthGuard)
   @Post('change-password')
-  async changePassword(
+  public async changePassword(
     @Body() changePasswordDto: ChangePasswordDto,
     @Request() req: AppRequest,
   ): Promise<ResultDto> {

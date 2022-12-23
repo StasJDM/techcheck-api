@@ -12,23 +12,23 @@ export class ThemeService {
     private readonly themeRepository: Repository<ThemeEntity>,
   ) {}
 
-  create(createThemeDto: CreateThemeDto, id: string): Promise<ThemeEntity> {
+  public create(createThemeDto: CreateThemeDto, id: string): Promise<ThemeEntity> {
     return this.themeRepository.save({ creatorId: id, ...createThemeDto });
   }
 
-  findAll(): Promise<ThemeEntity[]> {
+  public findAll(): Promise<ThemeEntity[]> {
     return this.themeRepository.find();
   }
 
-  findOne(id: string): Promise<ThemeEntity> {
+  public findOne(id: string): Promise<ThemeEntity> {
     return this.themeRepository.findOne({ where: { id } });
   }
 
-  update(id: string, updateThemeDto: UpdateThemeDto): Promise<UpdateResult> {
+  public update(id: string, updateThemeDto: UpdateThemeDto): Promise<UpdateResult> {
     return this.themeRepository.update(id, updateThemeDto);
   }
 
-  delete(id: string): Promise<DeleteResult> {
+  public delete(id: string): Promise<DeleteResult> {
     return this.themeRepository.softDelete(id);
   }
 }

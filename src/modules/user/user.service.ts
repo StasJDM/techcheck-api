@@ -10,21 +10,21 @@ import { User } from './entities/user.entity';
 export class UserService {
   constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
 
-  create(createUserDto: CreateUserDto): Promise<User> {
+  public create(createUserDto: CreateUserDto): Promise<User> {
     return this.userRepository.save(createUserDto);
   }
 
-  async findAll(): Promise<ReturnUserDto[]> {
+  public async findAll(): Promise<ReturnUserDto[]> {
     const users = await this.userRepository.find();
     return users.map((user) => new ReturnUserDto(user));
   }
 
-  async findById(id: string): Promise<ReturnUserDto> {
+  public async findById(id: string): Promise<ReturnUserDto> {
     const user = await this.userRepository.findOne({ where: { id } });
     return new ReturnUserDto(user);
   }
 
-  findByUsernameOrEmail(username: string): Promise<User> {
+  public findByUsernameOrEmail(username: string): Promise<User> {
     return this.userRepository.findOne({
       where: [
         {
@@ -35,11 +35,11 @@ export class UserService {
     });
   }
 
-  update(id: string, updateUserDto: UpdateUserDto): Promise<UpdateResult> {
+  public update(id: string, updateUserDto: UpdateUserDto): Promise<UpdateResult> {
     return this.userRepository.update(id, updateUserDto);
   }
 
-  remove(id: string): Promise<DeleteResult> {
+  public remove(id: string): Promise<DeleteResult> {
     return this.userRepository.softDelete(id);
   }
 }

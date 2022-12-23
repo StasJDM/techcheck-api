@@ -51,5 +51,18 @@ module.exports = {
         format: ['camelCase', 'UPPER_CASE'],
       },
     ],
+    '@typescript-eslint/explicit-member-accessibility': [
+      'error',
+      {
+        accessibility: 'explicit',
+        overrides: {
+          accessors: 'explicit',
+          constructors: 'off',
+          methods: 'explicit',
+          properties: 'off',
+          parameterProperties: 'explicit',
+        },
+      },
+    ],
   },
 };

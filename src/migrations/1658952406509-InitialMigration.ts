@@ -6,5 +6,6 @@ export class InitialMigration1658952406509 implements MigrationInterface {
     await queryRunner.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";');
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  public async down(): Promise<void> {}
 }

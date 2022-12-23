@@ -12,23 +12,23 @@ export class QuestionService {
     private readonly questionRepository: Repository<QuestionEntity>,
   ) {}
 
-  create(userId: string, createQuestionDto: CreateQuestionDto): Promise<QuestionEntity> {
+  public create(userId: string, createQuestionDto: CreateQuestionDto): Promise<QuestionEntity> {
     return this.questionRepository.save({ creatorId: userId, ...createQuestionDto });
   }
 
-  findAll(): Promise<QuestionEntity[]> {
+  public findAll(): Promise<QuestionEntity[]> {
     return this.questionRepository.find();
   }
 
-  findOne(id: string): Promise<QuestionEntity> {
+  public findOne(id: string): Promise<QuestionEntity> {
     return this.questionRepository.findOne({ where: { id } });
   }
 
-  update(id: string, updateQuestionDto: UpdateQuestionDto): Promise<UpdateResult> {
+  public update(id: string, updateQuestionDto: UpdateQuestionDto): Promise<UpdateResult> {
     return this.questionRepository.update(id, updateQuestionDto);
   }
 
-  remove(id: string): Promise<DeleteResult> {
+  public remove(id: string): Promise<DeleteResult> {
     return this.questionRepository.softDelete(id);
   }
 }

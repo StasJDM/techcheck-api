@@ -18,22 +18,22 @@ export class ThemeControllers {
   }
 
   @Get()
-  findAll(): Promise<ThemeEntity[]> {
+  public findAll(): Promise<ThemeEntity[]> {
     return this.themeService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') themeId: string): Promise<ThemeEntity> {
+  public findOne(@Param('id') themeId: string): Promise<ThemeEntity> {
     return this.themeService.findOne(themeId);
   }
 
   @Patch(':id')
-  update(@Param('id') themeId: string, @Body() updateThemeDto: UpdateThemeDto): Promise<UpdateResult> {
+  public update(@Param('id') themeId: string, @Body() updateThemeDto: UpdateThemeDto): Promise<UpdateResult> {
     return this.themeService.update(themeId, updateThemeDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') themeId: string): Promise<DeleteResult> {
+  public remove(@Param('id') themeId: string): Promise<DeleteResult> {
     return this.themeService.delete(themeId);
   }
 }

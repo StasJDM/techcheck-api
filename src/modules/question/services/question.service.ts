@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { PaginationDto } from 'src/modules/shared/dto/pagination.dto';
+import { PaginationResponse } from 'src/modules/shared/types/pagination-response.type';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CreateQuestionDto } from '../dto/create-question.dto';
 import { UpdateQuestionDto } from '../dto/update-question.dto';
@@ -13,8 +15,19 @@ export class QuestionService {
     return this.questionRepository.save({ creatorId: userId, ...createQuestionDto });
   }
 
-  public findAll(): Promise<QuestionEntity[]> {
-    return this.questionRepository.find({ relations: ['themes'] });
+  public async findAll(pagination: PaginationDto): Promise<PaginationResponse<QuestionEntity[]>> {
+    const skipTakeOptions = pagination.skipTakeOptions;
+
+    const [data, count] = await this.questionRepository.findAndCount({
+      relations: ['themes'],
+      ...skipTakeOptions,
+    });
+    pagination.total = count;
+
+    return {
+      data,
+      pagination,
+    };
   }
 
   public findOne(id: string): Promise<QuestionEntity> {

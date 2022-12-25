@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards, Query } from '@nestjs/common';
 import { QuestionService } from '../services/question.service';
 import { CreateQuestionDto } from '../dto/create-question.dto';
 import { UpdateQuestionDto } from '../dto/update-question.dto';
@@ -8,6 +8,8 @@ import { AppRequest } from '../../shared/types/app-request.type';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { AddThemeToQuestionDto } from '../dto/add-theme-to-question.dto';
 import { RemoveThemeFromQuestionDto } from '../dto/remove-theme-from-question.dto';
+import { PaginationDto } from 'src/modules/shared/dto/pagination.dto';
+import { PaginationResponse } from 'src/modules/shared/types/pagination-response.type';
 
 @Controller('questions')
 @UseGuards(JwtAuthGuard)
@@ -23,8 +25,8 @@ export class QuestionController {
   }
 
   @Get()
-  public findAll(): Promise<QuestionEntity[]> {
-    return this.questionService.findAll();
+  public findAll(@Query() paginationDto: PaginationDto): Promise<PaginationResponse<QuestionEntity[]>> {
+    return this.questionService.findAll(paginationDto);
   }
 
   @Get(':id')

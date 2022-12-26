@@ -15,18 +15,17 @@ export class QuestionService {
     return this.questionRepository.save({ creatorId: userId, ...createQuestionDto });
   }
 
-  public async findAll(pagination: PaginationDto): Promise<PaginationResponse<QuestionEntity[]>> {
-    const skipTakeOptions = pagination.skipTakeOptions;
+  public async findAll(paginationDto: PaginationDto): Promise<PaginationResponse<QuestionEntity[]>> {
+    const { skipTakeOptions } = paginationDto;
 
-    const [data, count] = await this.questionRepository.findAndCount({
+    const [data, total] = await this.questionRepository.findAndCount({
       relations: ['themes'],
       ...skipTakeOptions,
     });
-    pagination.total = count;
 
     return {
       data,
-      pagination,
+      pagination: { ...paginationDto.params, total },
     };
   }
 

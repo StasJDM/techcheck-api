@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { PaginationDto } from '../shared/dto/pagination.dto';
+import { PaginationResponse } from '../shared/types/pagination-response.type';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ReturnUserDto } from './dto/return-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -14,9 +16,13 @@ export class UserService {
     return this.userRepository.save(createUserDto);
   }
 
-  public async findAll(): Promise<ReturnUserDto[]> {
-    const users = await this.userRepository.find();
-    return users.map((user) => new ReturnUserDto(user));
+  public async findAll(paginationDto: PaginationDto): Promise<PaginationResponse<ReturnUserDto[]>> {
+    const { skipTakeOptions } = paginationDto;
+
+    const [users, total] = await this.userRepository.findAndCount({ ...skipTakeOptions });
+    const data = users.map((user) => new ReturnUserDto(user));
+
+    return { data, pagination: { ...paginationDto.params, total } };
   }
 
   public async findById(id: string): Promise<ReturnUserDto> {

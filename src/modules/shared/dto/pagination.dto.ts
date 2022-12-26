@@ -1,15 +1,23 @@
-import { Type } from 'class-transformer';
+import { Exclude, Type } from 'class-transformer';
 import { IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
+
+export enum OrderOptions {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}
+
+export interface PaginationOptions {
+  page: number;
+  pageSize: number;
+  total: number;
+  orderBy: string;
+  order: OrderOptions;
+}
 
 export interface SkipTakeOptions {
   skip?: number;
   take?: number;
   order?: Record<string, OrderOptions>;
-}
-
-export enum OrderOptions {
-  ASC = 'ASC',
-  DESC = 'DESC',
 }
 
 export class PaginationDto {
@@ -35,6 +43,17 @@ export class PaginationDto {
   @IsOptional()
   order?: OrderOptions;
 
+  public get params(): PaginationOptions {
+    return {
+      page: this.page,
+      pageSize: this.pageSize,
+      order: this.order,
+      orderBy: this.orderBy,
+      total: this.total,
+    };
+  }
+
+  @Exclude()
   public get skipTakeOptions(): SkipTakeOptions {
     return {
       skip: (this.page - 1) * this.pageSize,

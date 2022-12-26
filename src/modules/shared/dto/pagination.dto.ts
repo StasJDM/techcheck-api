@@ -1,9 +1,15 @@
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, Max, Min } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
 
 export interface SkipTakeOptions {
   skip?: number;
   take?: number;
+  order?: Record<string, OrderOptions>;
+}
+
+export enum OrderOptions {
+  ASC = 'ASC',
+  DESC = 'DESC',
 }
 
 export class PaginationDto {
@@ -22,10 +28,18 @@ export class PaginationDto {
 
   total: number;
 
+  @IsOptional()
+  orderBy?: string;
+
+  @IsEnum(OrderOptions)
+  @IsOptional()
+  order?: OrderOptions;
+
   public get skipTakeOptions(): SkipTakeOptions {
     return {
       skip: (this.page - 1) * this.pageSize,
       take: this.pageSize,
+      order: this.orderBy ? { [this.orderBy]: this.order || OrderOptions.ASC } : {},
     };
   }
 }

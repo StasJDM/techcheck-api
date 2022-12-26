@@ -8,6 +8,7 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -18,6 +19,8 @@ import { ReturnUserDto } from './dto/return-user.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ApiUpdateResultDto } from '../shared/dto/api-update-result.dto';
 import { ApiDeleteResultDto } from '../shared/dto/api-delete-result.dto';
+import { PaginationDto } from '../shared/dto/pagination.dto';
+import { PaginationResponse } from '../shared/types/pagination-response.type';
 
 @ApiTags('users')
 @Controller('users')
@@ -29,8 +32,8 @@ export class UserController {
   @ApiOperation({ summary: 'Find all users' })
   @ApiResponse({ type: ReturnUserDto, isArray: true })
   @Get()
-  public findAll(): Promise<User[]> {
-    return this.userService.findAll();
+  public findAll(@Query() paginationDto: PaginationDto): Promise<PaginationResponse<User[]>> {
+    return this.userService.findAll(paginationDto);
   }
 
   @ApiOperation({ summary: 'Find user by id' })

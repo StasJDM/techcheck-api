@@ -1,5 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { PaginationDto } from '../../shared/dto/pagination.dto';
+import { PaginationResponse } from '../../shared/types/pagination-response.type';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { AppRequest } from '../../shared/types/app-request.type';
 import { CreateThemeDto } from '../dto/create-theme.dto';
@@ -18,8 +20,8 @@ export class ThemeControllers {
   }
 
   @Get()
-  public findAll(): Promise<ThemeEntity[]> {
-    return this.themeService.findAll();
+  public findAll(@Query() paginationDto: PaginationDto): Promise<PaginationResponse<ThemeEntity[]>> {
+    return this.themeService.findAll(paginationDto);
   }
 
   @Get(':id')

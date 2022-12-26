@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginationDto } from '../../shared/dto/pagination.dto';
+import { PaginationResponse } from '../../shared/types/pagination-response.type';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CreateThemeDto } from '../dto/create-theme.dto';
 import { UpdateThemeDto } from '../dto/update-theme.dto';
@@ -16,8 +18,15 @@ export class ThemeService {
     return this.themeRepository.save({ creatorId: id, ...createThemeDto });
   }
 
-  public findAll(): Promise<ThemeEntity[]> {
-    return this.themeRepository.find();
+  public async findAll(paginationDto: PaginationDto): Promise<PaginationResponse<ThemeEntity[]>> {
+    const { skipTakeOptions } = paginationDto;
+
+    const [data, total] = await this.themeRepository.findAndCount({ ...skipTakeOptions });
+
+    return {
+      data,
+      pagination: { ...paginationDto.params, total },
+    };
   }
 
   public findOne(id: string): Promise<ThemeEntity> {

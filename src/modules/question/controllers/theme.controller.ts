@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
-import { PaginationDto } from 'src/modules/shared/dto/pagination.dto';
-import { PaginationResponse } from 'src/modules/shared/types/pagination-response.type';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { PaginationDto } from '../../shared/dto/pagination.dto';
+import { PaginationResponse } from '../../shared/types/pagination-response.type';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { AppRequest } from '../../shared/types/app-request.type';
 import { CreateThemeDto } from '../dto/create-theme.dto';

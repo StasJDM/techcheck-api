@@ -11,7 +11,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ThemeEntity } from './theme.entity';
-import { THEME_QUESTION_TABLE } from 'src/migrations/1671401833260-CreateThemeQuestionTable';
+import { THEME_QUESTION_TABLE } from '../../../migrations/1671401833260-CreateThemeQuestionTable';
 
 @Entity('question')
 export class QuestionEntity {

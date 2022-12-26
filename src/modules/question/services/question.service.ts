@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PaginationDto } from 'src/modules/shared/dto/pagination.dto';
-import { PaginationResponse } from 'src/modules/shared/types/pagination-response.type';
+import { PaginationDto } from '../../shared/dto/pagination.dto';
+import { PaginationResponse } from '../../shared/types/pagination-response.type';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CreateQuestionDto } from '../dto/create-question.dto';
 import { UpdateQuestionDto } from '../dto/update-question.dto';

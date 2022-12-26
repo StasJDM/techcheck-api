@@ -5,7 +5,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { THEME_QUESTION_TABLE } from 'src/migrations/1671401833260-CreateThemeQuestionTable';
+import { THEME_QUESTION_TABLE } from '../../../migrations/1671401833260-CreateThemeQuestionTable';
 import { QueryFailedError, Repository } from 'typeorm';
 import { QuestionEntity } from '../entities/question.entity';
 

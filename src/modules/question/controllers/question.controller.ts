@@ -8,8 +8,8 @@ import { AppRequest } from '../../shared/types/app-request.type';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { AddThemeToQuestionDto } from '../dto/add-theme-to-question.dto';
 import { RemoveThemeFromQuestionDto } from '../dto/remove-theme-from-question.dto';
-import { PaginationDto } from 'src/modules/shared/dto/pagination.dto';
-import { PaginationResponse } from 'src/modules/shared/types/pagination-response.type';
+import { PaginationDto } from '../../shared/dto/pagination.dto';
+import { PaginationResponse } from '../../shared/types/pagination-response.type';
 
 @Controller('questions')
 @UseGuards(JwtAuthGuard)

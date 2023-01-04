@@ -9,8 +9,7 @@ export class CreateTechCheckTemplateDto {
   @IsString()
   description?: string;
 
-  // TODO: Implement it!
-  // @IsOptional()
-  // @IsString({ each: true })
-  // questionIds?: string[];
+  @IsOptional()
+  @IsString({ each: true })
+  questionsIds?: string[];
 }

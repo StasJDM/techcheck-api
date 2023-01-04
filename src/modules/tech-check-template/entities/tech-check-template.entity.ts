@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
+  Entity,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -11,7 +12,9 @@ import {
 } from 'typeorm';
 import { TECH_CHECK_TEMPLATE_QUESTION_TABLE_NAME } from '../../../migrations/1672253373605-CreateTechCheckTemplateQuestionTable';
 import { User } from '../../../modules/user/entities/user.entity';
+import { TECH_CHECK_TEMPLATE_TABLE } from '../../../migrations/1672252798849-CreateTechCheckTemplateTable';
 
+@Entity(TECH_CHECK_TEMPLATE_TABLE)
 export class TechCheckTemplateEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

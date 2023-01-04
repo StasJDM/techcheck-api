@@ -54,6 +54,12 @@ export class CreateTechCheckTemplateTable1672252798849 implements MigrationInter
             referencedColumnNames: ['id'],
           },
         ],
+        uniques: [
+          {
+            name: `${TECH_CHECK_TEMPLATE_TABLE}_unique_title_and_owner`,
+            columnNames: ['title', 'owner_id'],
+          },
+        ],
       }),
     );
   }

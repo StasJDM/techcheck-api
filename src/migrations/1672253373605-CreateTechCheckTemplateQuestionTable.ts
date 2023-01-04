@@ -11,6 +11,14 @@ export class CreateTechCheckTemplateQuestionTable1672253373605 implements Migrat
         name: TECH_CHECK_TEMPLATE_QUESTION_TABLE_NAME,
         columns: [
           {
+            name: 'id',
+            type: 'uuid',
+            isPrimary: true,
+            isUnique: true,
+            generationStrategy: 'uuid',
+            default: 'uuid_generate_v4()',
+          },
+          {
             name: 'tech_check_template_id',
             type: 'uuid',
           },

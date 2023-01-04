@@ -9,6 +9,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { AppConfig } from './modules/shared/types/app-config.type';
+import { TechCheckTemplateModule } from './modules/tech-check-template/tech-check-template.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { AppConfig } from './modules/shared/types/app-config.type';
     SharedModule,
     AuthModule,
     QuestionModule,
+    TechCheckTemplateModule,
   ],
   controllers: [],
   providers: [

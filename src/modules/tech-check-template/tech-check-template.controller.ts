@@ -6,6 +6,8 @@ import { TechCheckTemplateEntity } from './entities/tech-check-template.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { AppRequest } from '../shared/types/app-request.type';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AddQuestionToTechCheckTemplateDto } from './dto/add-question-to-tech-check-template.dto';
+import { RemoveQuestionFromTechCheckTemplateDto } from './dto/remove-question-from-tech-check-template.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('tech-check-templates')
@@ -28,6 +30,32 @@ export class TechCheckTemplateController {
   @Get(':id')
   public findOne(@Param('id') id: string, @Req() appRequest: AppRequest): Promise<TechCheckTemplateEntity> {
     return this.techCheckTemplateService.findOne(id, appRequest.user.id);
+  }
+
+  @Post(':id')
+  public addQuestionToTechCheckTemplate(
+    @Param('id') techCheckTemplateId: string,
+    @Body() addQuestionToTechCheckTemplateDto: AddQuestionToTechCheckTemplateDto,
+    @Req() appRequest: AppRequest,
+  ): Promise<TechCheckTemplateEntity> {
+    return this.techCheckTemplateService.addQuestionToTechCheckTemplate(
+      techCheckTemplateId,
+      addQuestionToTechCheckTemplateDto.id,
+      appRequest.user.id,
+    );
+  }
+
+  @Delete(':id')
+  public removeQuestionFromTechCheckTemplate(
+    @Param('id') techCheckTemplateId: string,
+    @Body() removeQuestionFromTechCheckTemplateDto: RemoveQuestionFromTechCheckTemplateDto,
+    @Req() appRequest: AppRequest,
+  ): Promise<TechCheckTemplateEntity> {
+    return this.techCheckTemplateService.removeQuestionFromTechCheckTemplate(
+      techCheckTemplateId,
+      removeQuestionFromTechCheckTemplateDto.id,
+      appRequest.user.id,
+    );
   }
 
   @Patch(':id')

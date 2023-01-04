@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CreateTechCheckTemplateDto } from './dto/create-tech-check-template.dto';
@@ -77,5 +77,35 @@ export class TechCheckTemplateService {
 
   public remove(id: string, ownerId: string): Promise<DeleteResult> {
     return this.techCheckTemplateRepository.softDelete({ id, ownerId });
+  }
+
+  public async addQuestionToTechCheckTemplate(
+    techCheckTemplateId: string,
+    questionId: string,
+    ownerId: string,
+  ): Promise<TechCheckTemplateEntity> {
+    const techCheckTemplate = await this.findOne(techCheckTemplateId, ownerId);
+    if (!techCheckTemplate) {
+      throw new NotFoundException('Tech check was not found');
+    }
+
+    await this.techCheckTemplateQuestionRepository.save({ techCheckTemplateId, questionId });
+
+    return this.findOne(techCheckTemplateId, ownerId);
+  }
+
+  public async removeQuestionFromTechCheckTemplate(
+    techCheckTemplateId: string,
+    questionId: string,
+    ownerId: string,
+  ): Promise<TechCheckTemplateEntity> {
+    const techCheckTemplate = await this.findOne(techCheckTemplateId, ownerId);
+    if (!techCheckTemplate) {
+      throw new NotFoundException('Tech check was not found');
+    }
+
+    await this.techCheckTemplateQuestionRepository.delete({ techCheckTemplateId, questionId });
+
+    return this.findOne(techCheckTemplateId, ownerId);
   }
 }

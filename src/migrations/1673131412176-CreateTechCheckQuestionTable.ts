@@ -26,6 +26,32 @@ export class CreateTechCheckQuestionTable1673131412176 implements MigrationInter
             name: 'question_id',
             type: 'uuid',
           },
+          {
+            name: 'mark',
+            type: 'integer',
+            isNullable: true,
+          },
+          {
+            name: 'note',
+            type: 'varchar',
+            isNullable: true,
+          },
+          {
+            name: 'created_at',
+            type: 'timestamp',
+            default: 'now()',
+          },
+          {
+            name: 'updated_at',
+            type: 'timestamp',
+            default: 'now()',
+            onUpdate: 'now()',
+          },
+          {
+            name: 'deleted_at',
+            type: 'timestamp',
+            isNullable: true,
+          },
         ],
         foreignKeys: [
           {

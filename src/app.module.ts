@@ -10,6 +10,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { AppConfig } from './modules/shared/types/app-config.type';
 import { TechCheckTemplateModule } from './modules/tech-check-template/tech-check-template.module';
+import { TechCheckModule } from './modules/tech-check/tech-check.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { TechCheckTemplateModule } from './modules/tech-check-template/tech-chec
     AuthModule,
     QuestionModule,
     TechCheckTemplateModule,
+    TechCheckModule,
   ],
   controllers: [],
   providers: [

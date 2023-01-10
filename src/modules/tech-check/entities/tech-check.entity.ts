@@ -20,6 +20,14 @@ export enum TechCheckType {
   RealTime,
 }
 
+export enum TechCheckStatus {
+  Created,
+  InProgress,
+  Canceled,
+  Finished,
+  Restarted,
+}
+
 @Entity(TECH_CHECK_TABLE_NAME)
 export class TechCheckEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -31,11 +39,14 @@ export class TechCheckEntity {
   @Column({ nullable: true })
   description?: string;
 
-  @Column()
+  @Column({ enum: TechCheckType })
   type: TechCheckType;
 
   @Column()
   person: string;
+
+  @Column({ enum: TechCheckStatus, default: TechCheckStatus.Created })
+  status: TechCheckStatus;
 
   @ManyToOne(() => User)
   techChecker: User;

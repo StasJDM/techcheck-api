@@ -1,3 +1,4 @@
+import { TechCheckStatus } from '../modules/tech-check/entities/tech-check.entity';
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 import { USER_TABLE_NAME } from './1658954315540-CreateUserTable';
 import { TECH_CHECK_TEMPLATE_TABLE } from './1672252798849-CreateTechCheckTemplateTable';
@@ -34,6 +35,11 @@ export class CreateTechCheckTable1673131403241 implements MigrationInterface {
           {
             name: 'person',
             type: 'varchar',
+          },
+          {
+            name: 'status',
+            type: 'smallint',
+            default: TechCheckStatus.Created,
           },
           {
             name: 'tech_checker_id',

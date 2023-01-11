@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationDto } from '../shared/dto/pagination.dto';
 import { TechCheckTemplateService } from '../tech-check-template/tech-check-template.service';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { DataSource, DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CreateTechCheckFromTemplateDto } from './dto/create-tech-check-from-template.dto';
 import { UpdateTechCheckFromTemplateDto } from './dto/update-tech-check-from-template.dto';
 import { TechCheckEntity, TechCheckType } from './entities/tech-check.entity';
@@ -12,10 +12,10 @@ import { PaginationResponse } from '../shared/types/pagination-response.type';
 @Injectable()
 export class TechCheckService {
   constructor(
+    private readonly dataSource: DataSource,
     @InjectRepository(TechCheckEntity)
     private readonly techCheckRepository: Repository<TechCheckEntity>,
     @InjectRepository(TechCheckQuestionEntity)
-    private readonly techCheckQuestionRepository: Repository<TechCheckQuestionEntity>,
     private readonly techCheckTemplateService: TechCheckTemplateService,
   ) {}
 
@@ -32,22 +32,24 @@ export class TechCheckService {
       throw new NotFoundException('Tech check template not found or you have no access');
     }
 
-    const techCheck = await this.techCheckRepository.save({
-      ...createTechCheckDto,
-      techCheckerId,
-      type: TechCheckType.FromTemplate,
+    return this.dataSource.transaction<TechCheckEntity>(async (transactionManager) => {
+      const techCheck = await transactionManager.save(TechCheckEntity, {
+        ...createTechCheckDto,
+        techCheckerId,
+        type: TechCheckType.FromTemplate,
+      });
+
+      const saveTechCheckQuestionsPromises = techCheckTemplate.questions.map((question) =>
+        transactionManager.save(TechCheckQuestionEntity, {
+          questionId: question.id,
+          techCheckId: techCheck.id,
+        }),
+      );
+
+      await Promise.all(saveTechCheckQuestionsPromises);
+
+      return techCheck;
     });
-
-    const saveTechCheckQuestionsPromises = techCheckTemplate.questions.map((question) =>
-      this.techCheckQuestionRepository.save({
-        questionId: question.id,
-        techCheckId: techCheck.id,
-      }),
-    );
-
-    await Promise.all(saveTechCheckQuestionsPromises);
-
-    return techCheck;
   }
 
   public async findAll(
@@ -87,17 +89,19 @@ export class TechCheckService {
 
     const { questionsIds, ...toUpdateTechCheckData } = updateTechCheckDto;
 
-    if (questionsIds) {
-      await this.techCheckQuestionRepository.delete({ techCheckId: id }); // TODO: Soft delete
+    return this.dataSource.transaction<UpdateResult>(async (transactionManager) => {
+      if (questionsIds) {
+        await transactionManager.delete(TechCheckQuestionEntity, { techCheckId: id }); // TODO: Soft delete
 
-      const saveQuestionPromises = updateTechCheckDto.questionsIds.map((questionId) =>
-        this.techCheckQuestionRepository.save({ techCheckId: id, questionId }),
-      );
+        const saveQuestionPromises = updateTechCheckDto.questionsIds.map((questionId) =>
+          transactionManager.save(TechCheckQuestionEntity, { techCheckId: id, questionId }),
+        );
 
-      await Promise.all(saveQuestionPromises);
-    }
+        await Promise.all(saveQuestionPromises);
+      }
 
-    return this.techCheckRepository.update({ id, techCheckerId }, toUpdateTechCheckData);
+      return transactionManager.update(TechCheckEntity, { id, techCheckerId }, toUpdateTechCheckData);
+    });
   }
 
   public remove(id: string, techCheckerId: string): Promise<DeleteResult> {

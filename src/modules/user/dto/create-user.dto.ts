@@ -1,4 +1,4 @@
-import { IntersectionType, OmitType, PartialType } from '@nestjs/swagger';
+import { IntersectionType, OmitType, PartialType } from '@nestjs/mapped-types';
 import { RegisterUserDto } from '../../auth/dto/register-user.dto';
 import { UserDto } from './user.dto';
 

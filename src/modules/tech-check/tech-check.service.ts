@@ -7,6 +7,7 @@ import { CreateTechCheckFromTemplateDto } from './dto/create-tech-check-from-tem
 import { UpdateTechCheckFromTemplateDto } from './dto/update-tech-check-from-template.dto';
 import { TechCheckEntity, TechCheckType } from './entities/tech-check.entity';
 import { TechCheckQuestionEntity } from './entities/tech-check-question.entity';
+import { PaginationResponse } from '../shared/types/pagination-response.type';
 
 @Injectable()
 export class TechCheckService {
@@ -49,24 +50,54 @@ export class TechCheckService {
     return techCheck;
   }
 
-  // TODO: pagination
-  // TODO: Maybe SQL
-  public findAll(paginationDto: PaginationDto, techCheckerId: string): Promise<TechCheckEntity[]> {
-    return this.techCheckRepository.find({ where: { techCheckerId }, relations: ['questions'] });
+  public async findAll(
+    paginationDto: PaginationDto,
+    techCheckerId: string,
+  ): Promise<PaginationResponse<TechCheckEntity[]>> {
+    const { skipTakeOptions } = paginationDto;
+
+    const [data, total] = await this.techCheckRepository.findAndCount({
+      where: { techCheckerId },
+      ...skipTakeOptions,
+    });
+
+    return {
+      data,
+      pagination: { ...paginationDto.params, total },
+    };
   }
 
-  // TODO: Maybe SQL
   public findOne(id: string, techCheckerId: string): Promise<TechCheckEntity> {
-    return this.techCheckRepository.findOne({ where: { id, techCheckerId } });
+    return this.techCheckRepository.findOne({
+      where: { id, techCheckerId },
+      relations: ['questions', 'questions.question'],
+    });
   }
 
-  // TODO
-  public update(
+  public async update(
     id: string,
     updateTechCheckDto: UpdateTechCheckFromTemplateDto,
     techCheckerId: string,
   ): Promise<UpdateResult> {
-    return this.techCheckRepository.update({ id, techCheckerId }, updateTechCheckDto);
+    const techCheck = await this.findOne(id, techCheckerId);
+
+    if (!techCheck) {
+      throw new NotFoundException('Tech check not found or you have no access');
+    }
+
+    const { questionsIds, ...toUpdateTechCheckData } = updateTechCheckDto;
+
+    if (questionsIds) {
+      await this.techCheckQuestionRepository.delete({ techCheckId: id }); // TODO: Soft delete
+
+      const saveQuestionPromises = updateTechCheckDto.questionsIds.map((questionId) =>
+        this.techCheckQuestionRepository.save({ techCheckId: id, questionId }),
+      );
+
+      await Promise.all(saveQuestionPromises);
+    }
+
+    return this.techCheckRepository.update({ id, techCheckerId }, toUpdateTechCheckData);
   }
 
   public remove(id: string, techCheckerId: string): Promise<DeleteResult> {

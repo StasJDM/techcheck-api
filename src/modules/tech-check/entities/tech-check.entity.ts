@@ -1,5 +1,4 @@
 import { TECH_CHECK_TABLE_NAME } from '../../../migrations/1673131403241-CreateTechCheckTable';
-import { TECH_CHECK_QUESTION_TABLE_NAME } from '../../../migrations/1673131412176-CreateTechCheckQuestionTable';
 import { QuestionEntity } from '../../question/entities/question.entity';
 import { User } from '../../user/entities/user.entity';
 import {
@@ -7,13 +6,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { TechCheckTemplateEntity } from '../../tech-check-template/entities/tech-check-template.entity';
+import { TechCheckQuestionEntity } from './tech-check-question.entity';
 
 export enum TechCheckType {
   FromTemplate,
@@ -60,8 +59,7 @@ export class TechCheckEntity {
   @Column('uuid')
   techCheckTemplateId: string;
 
-  @ManyToMany(() => QuestionEntity)
-  @JoinTable({ name: TECH_CHECK_QUESTION_TABLE_NAME })
+  @OneToMany(() => TechCheckQuestionEntity, (techCheckQuestion) => techCheckQuestion.techCheck)
   questions: QuestionEntity[];
 
   @CreateDateColumn()

@@ -7,6 +7,7 @@ import { TechCheckEntity } from './entities/tech-check.entity';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { AppRequest } from '../shared/types/app-request.type';
 import { PaginationDto } from '../shared/dto/pagination.dto';
+import { PaginationResponse } from '../shared/types/pagination-response.type';
 
 @Controller('tech-checks')
 @UseGuards(JwtAuthGuard)
@@ -22,7 +23,10 @@ export class TechCheckController {
   }
 
   @Get()
-  public findAll(@Query() paginationDto: PaginationDto, @Req() req: AppRequest): Promise<TechCheckEntity[]> {
+  public findAll(
+    @Query() paginationDto: PaginationDto,
+    @Req() req: AppRequest,
+  ): Promise<PaginationResponse<TechCheckEntity[]>> {
     return this.techCheckService.findAll(paginationDto, req.user.id);
   }
 

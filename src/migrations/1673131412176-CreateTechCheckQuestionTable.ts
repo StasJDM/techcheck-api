@@ -68,7 +68,7 @@ export class CreateTechCheckQuestionTable1673131412176 implements MigrationInter
         uniques: [
           {
             name: `${TECH_CHECK_QUESTION_TABLE_NAME}_composite_key`,
-            columnNames: ['tech_check_id', 'question_id'],
+            columnNames: ['tech_check_id', 'question_id', 'deleted_at'],
           },
         ],
       }),

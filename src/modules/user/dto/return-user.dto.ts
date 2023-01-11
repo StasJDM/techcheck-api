@@ -1,4 +1,4 @@
-import { OmitType } from '@nestjs/swagger';
+import { OmitType } from '@nestjs/mapped-types';
 import { Exclude } from 'class-transformer';
 import { User } from '../entities/user.entity';
 import { UserDto } from './user.dto';

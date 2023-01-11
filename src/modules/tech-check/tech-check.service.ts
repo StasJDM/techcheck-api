@@ -15,7 +15,6 @@ export class TechCheckService {
     private readonly dataSource: DataSource,
     @InjectRepository(TechCheckEntity)
     private readonly techCheckRepository: Repository<TechCheckEntity>,
-    @InjectRepository(TechCheckQuestionEntity)
     private readonly techCheckTemplateService: TechCheckTemplateService,
   ) {}
 

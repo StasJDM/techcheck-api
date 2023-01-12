@@ -8,6 +8,7 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 import { AppRequest } from '../shared/types/app-request.type';
 import { PaginationDto } from '../shared/dto/pagination.dto';
 import { PaginationResponse } from '../shared/types/pagination-response.type';
+import { UpdateTechCheckQuestionInfoDto } from './dto/update-tech-check-question-info.dto';
 
 @Controller('tech-checks')
 @UseGuards(JwtAuthGuard)
@@ -42,6 +43,21 @@ export class TechCheckController {
     @Req() req: AppRequest,
   ): Promise<UpdateResult> {
     return this.techCheckService.update(id, updateTechCheckDto, req.user.id);
+  }
+
+  @Patch(':techCheckId/questions/:questionId')
+  public updateTechCheckQuestionInfo(
+    @Param('techCheckId') techCheckId: string,
+    @Param('questionId') questionId: string,
+    @Body() updateTechCheckQuestionInfoDto: UpdateTechCheckQuestionInfoDto,
+    @Req() req: AppRequest,
+  ): Promise<UpdateResult> {
+    return this.techCheckService.updateTechCheckQuestionInfo(
+      techCheckId,
+      questionId,
+      updateTechCheckQuestionInfoDto,
+      req.user.id,
+    );
   }
 
   @Delete(':id')

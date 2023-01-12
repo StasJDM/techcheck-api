@@ -8,6 +8,7 @@ import { UpdateTechCheckFromTemplateDto } from './dto/update-tech-check-from-tem
 import { TechCheckEntity, TechCheckType } from './entities/tech-check.entity';
 import { TechCheckQuestionEntity } from './entities/tech-check-question.entity';
 import { PaginationResponse } from '../shared/types/pagination-response.type';
+import { UpdateTechCheckQuestionInfoDto } from './dto/update-tech-check-question-info.dto';
 
 @Injectable()
 export class TechCheckService {
@@ -15,6 +16,8 @@ export class TechCheckService {
     private readonly dataSource: DataSource,
     @InjectRepository(TechCheckEntity)
     private readonly techCheckRepository: Repository<TechCheckEntity>,
+    @InjectRepository(TechCheckQuestionEntity)
+    private readonly techCheckQuestionRepository: Repository<TechCheckQuestionEntity>,
     private readonly techCheckTemplateService: TechCheckTemplateService,
   ) {}
 
@@ -105,5 +108,20 @@ export class TechCheckService {
 
   public remove(id: string, techCheckerId: string): Promise<DeleteResult> {
     return this.techCheckRepository.softDelete({ id, techCheckerId });
+  }
+
+  public async updateTechCheckQuestionInfo(
+    techCheckId: string,
+    questionId: string,
+    updateTechCheckQuestionInfoDto: UpdateTechCheckQuestionInfoDto,
+    techCheckerId: string,
+  ): Promise<UpdateResult> {
+    const techCheck = await this.findOne(techCheckId, techCheckerId);
+
+    if (!techCheck) {
+      throw new NotFoundException('Tech check not found or you have no access');
+    }
+
+    return this.techCheckQuestionRepository.update(questionId, updateTechCheckQuestionInfoDto);
   }
 }

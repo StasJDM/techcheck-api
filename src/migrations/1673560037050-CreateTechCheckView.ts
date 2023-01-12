@@ -1,9 +1,11 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
+export const TECH_CHECK_VIEW_NAME = 'v_tech_checks';
+
 export class CreateTechCheckView1673560037050 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-        CREATE OR REPLACE VIEW v_tech_checks AS
+        CREATE OR REPLACE VIEW ${TECH_CHECK_VIEW_NAME} AS
         SELECT tc.*,
             COUNT(*)       AS questions_count,
             AVG(tc_q.mark) AS mark
@@ -16,6 +18,6 @@ export class CreateTechCheckView1673560037050 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`DROP VIEW IF EXISTS v_tech_checks;`);
+    await queryRunner.query(`DROP VIEW IF EXISTS ${TECH_CHECK_VIEW_NAME};`);
   }
 }

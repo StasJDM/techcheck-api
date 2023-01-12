@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { TechCheckTemplateService } from '../tech-check-template/tech-check-template.service';
+import { TechCheckQuestionEntity } from './entities/tech-check-question.entity';
 import { TechCheckEntity } from './entities/tech-check.entity';
 import { TechCheckService } from './tech-check.service';
 
@@ -14,6 +15,7 @@ describe('TechCheckService', () => {
         TechCheckService,
         { provide: TechCheckTemplateService, useValue: {} },
         { provide: getRepositoryToken(TechCheckEntity), useValue: {} },
+        { provide: getRepositoryToken(TechCheckQuestionEntity), useValue: {} },
         { provide: DataSource, useValue: {} },
       ],
     }).compile();

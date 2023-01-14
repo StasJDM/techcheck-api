@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { THEME_QUESTION_TABLE } from '../../../migrations/1671401833260-CreateThemeQuestionTable';
 import { QueryFailedError, Repository } from 'typeorm';
@@ -17,9 +12,7 @@ export class QuestionRepository extends Repository<QuestionEntity> {
 
   public async addTheme(questionId: string, themeId: string): Promise<void> {
     try {
-      await this.query(
-        `INSERT INTO ${THEME_QUESTION_TABLE}(theme_id, question_id) VALUES ('${themeId}', '${questionId}')`,
-      );
+      await this.query(`INSERT INTO ${THEME_QUESTION_TABLE}(theme_id, question_id) VALUES ('${themeId}', '${questionId}')`);
     } catch (e) {
       if (e instanceof QueryFailedError) {
         // TODO: create common error-handling
@@ -38,8 +31,6 @@ export class QuestionRepository extends Repository<QuestionEntity> {
   }
 
   public async removeTheme(questionId: string, themeId: string): Promise<void> {
-    await this.query(
-      `DELETE FROM ${THEME_QUESTION_TABLE} WHERE theme_id = '${themeId}' AND question_id = '${questionId}'`,
-    );
+    await this.query(`DELETE FROM ${THEME_QUESTION_TABLE} WHERE theme_id = '${themeId}' AND question_id = '${questionId}'`);
   }
 }

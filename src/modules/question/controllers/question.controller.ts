@@ -17,10 +17,7 @@ export class QuestionController {
   constructor(private readonly questionService: QuestionService) {}
 
   @Post()
-  public create(
-    @Body() createQuestionDto: CreateQuestionDto,
-    @Req() request: AppRequest,
-  ): Promise<QuestionEntity> {
+  public create(@Body() createQuestionDto: CreateQuestionDto, @Req() request: AppRequest): Promise<QuestionEntity> {
     return this.questionService.create(request.user.id, createQuestionDto);
   }
 
@@ -35,10 +32,7 @@ export class QuestionController {
   }
 
   @Patch(':id')
-  public update(
-    @Param('id') id: string,
-    @Body() updateQuestionDto: UpdateQuestionDto,
-  ): Promise<UpdateResult> {
+  public update(@Param('id') id: string, @Body() updateQuestionDto: UpdateQuestionDto): Promise<UpdateResult> {
     return this.questionService.update(id, updateQuestionDto);
   }
 
@@ -48,10 +42,7 @@ export class QuestionController {
   }
 
   @Post(':questionId/themes')
-  public addThemeToQuestion(
-    @Param('questionId') questionId: string,
-    @Body() addThemeToQuestionDto: AddThemeToQuestionDto,
-  ): Promise<void> {
+  public addThemeToQuestion(@Param('questionId') questionId: string, @Body() addThemeToQuestionDto: AddThemeToQuestionDto): Promise<void> {
     return this.questionService.addThemeToQuestion(questionId, addThemeToQuestionDto.id);
   }
 

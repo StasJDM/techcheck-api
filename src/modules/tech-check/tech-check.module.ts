@@ -8,10 +8,7 @@ import { TechCheckTemplateModule } from '../tech-check-template/tech-check-templ
 import { TechCheckViewEntity } from './view-entities/tech-checks.view-entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([TechCheckEntity, TechCheckQuestionEntity, TechCheckViewEntity]),
-    TechCheckTemplateModule,
-  ],
+  imports: [TypeOrmModule.forFeature([TechCheckEntity, TechCheckQuestionEntity, TechCheckViewEntity]), TechCheckTemplateModule],
   controllers: [TechCheckController],
   providers: [TechCheckService],
 })

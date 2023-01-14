@@ -1,13 +1,4 @@
-import {
-  Body,
-  ClassSerializerInterceptor,
-  Controller,
-  Post,
-  Req,
-  Request,
-  UseGuards,
-  UseInterceptors,
-} from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Post, Req, Request, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AppRequest } from '../shared/types/app-request.type';
 import { ResultDto } from '../shared/dto/result.dto';
@@ -49,10 +40,7 @@ export class AuthController {
   @ApiResponse({ type: ResultDto })
   @UseGuards(JwtAuthGuard)
   @Post('change-password')
-  public async changePassword(
-    @Body() changePasswordDto: ChangePasswordDto,
-    @Request() req: AppRequest,
-  ): Promise<ResultDto> {
+  public async changePassword(@Body() changePasswordDto: ChangePasswordDto, @Request() req: AppRequest): Promise<ResultDto> {
     const { id } = req.user;
     return this.authService.changePassword(id, changePasswordDto);
   }

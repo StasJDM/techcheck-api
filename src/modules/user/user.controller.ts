@@ -1,15 +1,4 @@
-import {
-  Controller,
-  Get,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseInterceptors,
-  ClassSerializerInterceptor,
-  UseGuards,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, UseGuards, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';

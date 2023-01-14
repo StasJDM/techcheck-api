@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { DataSource, DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { PaginationDto } from '../shared/dto/pagination.dto';
 import { PaginationResponse } from '../shared/types/pagination-response.type';
 import { CreateTechCheckTemplateDto } from './dto/create-tech-check-template.dto';
@@ -11,6 +11,7 @@ import { TechCheckTemplateEntity } from './entities/tech-check-template.entity';
 @Injectable()
 export class TechCheckTemplateService {
   constructor(
+    private readonly dataSource: DataSource,
     @InjectRepository(TechCheckTemplateEntity)
     private readonly techCheckTemplateRepository: Repository<TechCheckTemplateEntity>,
     @InjectRepository(TechCheckTemplateQuestionEntity)
@@ -18,21 +19,23 @@ export class TechCheckTemplateService {
   ) {}
 
   public async create(ownerId: string, createTechCheckTemplateDto: CreateTechCheckTemplateDto): Promise<TechCheckTemplateEntity> {
-    const techCheckTemplate = await this.techCheckTemplateRepository.save({
-      ...createTechCheckTemplateDto,
-      ownerId,
+    return this.dataSource.manager.transaction<TechCheckTemplateEntity>(async (transactionManager) => {
+      const techCheckTemplate = await transactionManager.save(TechCheckTemplateEntity, {
+        ...createTechCheckTemplateDto,
+        ownerId,
+      });
+
+      await Promise.all(
+        (createTechCheckTemplateDto.questionsIds || []).map((questionId) =>
+          transactionManager.save(TechCheckTemplateQuestionEntity, {
+            techCheckTemplateId: techCheckTemplate.id,
+            questionId,
+          }),
+        ),
+      );
+
+      return techCheckTemplate;
     });
-
-    await Promise.all(
-      (createTechCheckTemplateDto.questionsIds || []).map((questionId) =>
-        this.techCheckTemplateQuestionRepository.save({
-          techCheckTemplateId: techCheckTemplate.id,
-          questionId,
-        }),
-      ),
-    );
-
-    return techCheckTemplate;
   }
 
   public async findAll(ownerId: string, paginationDto: PaginationDto): Promise<PaginationResponse<TechCheckTemplateEntity[]>> {
@@ -66,20 +69,22 @@ export class TechCheckTemplateService {
       throw new ForbiddenException('You have not access to this tech check template');
     }
 
-    const { questionsIds, ...toUpdateDto } = updateTechCheckTemplateDto;
-    if (questionsIds) {
-      await this.techCheckTemplateQuestionRepository.delete({ techCheckTemplateId });
-      await Promise.all(
-        questionsIds.map((questionId) =>
-          this.techCheckTemplateQuestionRepository.save({
-            techCheckTemplateId,
-            questionId,
-          }),
-        ),
-      );
-    }
+    return this.dataSource.manager.transaction<UpdateResult>(async (transactionManager) => {
+      const { questionsIds, ...toUpdateDto } = updateTechCheckTemplateDto;
+      if (questionsIds) {
+        await transactionManager.delete(TechCheckTemplateQuestionEntity, { techCheckTemplateId });
+        await Promise.all(
+          questionsIds.map((questionId) =>
+            transactionManager.save(TechCheckTemplateQuestionEntity, {
+              techCheckTemplateId,
+              questionId,
+            }),
+          ),
+        );
+      }
 
-    return this.techCheckTemplateRepository.update({ id: techCheckTemplateId, ownerId }, toUpdateDto);
+      return transactionManager.update(TechCheckTemplateEntity, { id: techCheckTemplateId, ownerId }, toUpdateDto);
+    });
   }
 
   public remove(id: string, ownerId: string): Promise<DeleteResult> {

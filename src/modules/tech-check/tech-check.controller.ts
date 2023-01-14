@@ -9,6 +9,7 @@ import { AppRequest } from '../shared/types/app-request.type';
 import { PaginationDto } from '../shared/dto/pagination.dto';
 import { PaginationResponse } from '../shared/types/pagination-response.type';
 import { UpdateTechCheckQuestionInfoDto } from './dto/update-tech-check-question-info.dto';
+import { TechCheckViewEntity } from './view-entities/tech-checks.view-entity';
 
 @Controller('tech-checks')
 @UseGuards(JwtAuthGuard)
@@ -27,7 +28,7 @@ export class TechCheckController {
   public findAll(
     @Query() paginationDto: PaginationDto,
     @Req() req: AppRequest,
-  ): Promise<PaginationResponse<TechCheckEntity[]>> {
+  ): Promise<PaginationResponse<TechCheckViewEntity[]>> {
     return this.techCheckService.findAll(paginationDto, req.user.id);
   }
 

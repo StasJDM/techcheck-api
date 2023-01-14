@@ -5,9 +5,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TechCheckEntity } from './entities/tech-check.entity';
 import { TechCheckQuestionEntity } from './entities/tech-check-question.entity';
 import { TechCheckTemplateModule } from '../tech-check-template/tech-check-template.module';
+import { TechCheckViewEntity } from './view-entities/tech-checks.view-entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TechCheckEntity, TechCheckQuestionEntity]), TechCheckTemplateModule],
+  imports: [
+    TypeOrmModule.forFeature([TechCheckEntity, TechCheckQuestionEntity, TechCheckViewEntity]),
+    TechCheckTemplateModule,
+  ],
   controllers: [TechCheckController],
   providers: [TechCheckService],
 })

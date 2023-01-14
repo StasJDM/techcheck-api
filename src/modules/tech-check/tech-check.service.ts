@@ -9,6 +9,7 @@ import { TechCheckEntity, TechCheckType } from './entities/tech-check.entity';
 import { TechCheckQuestionEntity } from './entities/tech-check-question.entity';
 import { PaginationResponse } from '../shared/types/pagination-response.type';
 import { UpdateTechCheckQuestionInfoDto } from './dto/update-tech-check-question-info.dto';
+import { TechCheckViewEntity } from './view-entities/tech-checks.view-entity';
 
 @Injectable()
 export class TechCheckService {
@@ -57,10 +58,10 @@ export class TechCheckService {
   public async findAll(
     paginationDto: PaginationDto,
     techCheckerId: string,
-  ): Promise<PaginationResponse<TechCheckEntity[]>> {
+  ): Promise<PaginationResponse<TechCheckViewEntity[]>> {
     const { skipTakeOptions } = paginationDto;
 
-    const [data, total] = await this.techCheckRepository.findAndCount({
+    const [data, total] = await this.dataSource.manager.findAndCount(TechCheckViewEntity, {
       where: { techCheckerId },
       ...skipTakeOptions,
     });

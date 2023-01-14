@@ -15,10 +15,7 @@ export class TechCheckTemplateService {
     private readonly techCheckTemplateQuestionRepository: Repository<TechCheckTemplateQuestionEntity>,
   ) {}
 
-  public async create(
-    ownerId: string,
-    createTechCheckTemplateDto: CreateTechCheckTemplateDto,
-  ): Promise<TechCheckTemplateEntity> {
+  public async create(ownerId: string, createTechCheckTemplateDto: CreateTechCheckTemplateDto): Promise<TechCheckTemplateEntity> {
     const techCheckTemplate = await this.techCheckTemplateRepository.save({
       ...createTechCheckTemplateDto,
       ownerId,

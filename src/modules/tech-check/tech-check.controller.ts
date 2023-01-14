@@ -17,18 +17,12 @@ export class TechCheckController {
   constructor(private readonly techCheckService: TechCheckService) {}
 
   @Post('from-template')
-  public createFromTemplate(
-    @Body() createTechCheckDto: CreateTechCheckFromTemplateDto,
-    @Req() req: AppRequest,
-  ): Promise<TechCheckEntity> {
+  public createFromTemplate(@Body() createTechCheckDto: CreateTechCheckFromTemplateDto, @Req() req: AppRequest): Promise<TechCheckEntity> {
     return this.techCheckService.createFromTemplate(createTechCheckDto, req.user.id);
   }
 
   @Get()
-  public findAll(
-    @Query() paginationDto: PaginationDto,
-    @Req() req: AppRequest,
-  ): Promise<PaginationResponse<TechCheckViewEntity[]>> {
+  public findAll(@Query() paginationDto: PaginationDto, @Req() req: AppRequest): Promise<PaginationResponse<TechCheckViewEntity[]>> {
     return this.techCheckService.findAll(paginationDto, req.user.id);
   }
 
@@ -53,12 +47,7 @@ export class TechCheckController {
     @Body() updateTechCheckQuestionInfoDto: UpdateTechCheckQuestionInfoDto,
     @Req() req: AppRequest,
   ): Promise<UpdateResult> {
-    return this.techCheckService.updateTechCheckQuestionInfo(
-      techCheckId,
-      questionId,
-      updateTechCheckQuestionInfoDto,
-      req.user.id,
-    );
+    return this.techCheckService.updateTechCheckQuestionInfo(techCheckId, questionId, updateTechCheckQuestionInfoDto, req.user.id);
   }
 
   @Delete(':id')

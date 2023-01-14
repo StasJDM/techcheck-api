@@ -22,14 +22,8 @@ export class TechCheckService {
     private readonly techCheckTemplateService: TechCheckTemplateService,
   ) {}
 
-  public async createFromTemplate(
-    createTechCheckDto: CreateTechCheckFromTemplateDto,
-    techCheckerId: string,
-  ): Promise<TechCheckEntity> {
-    const techCheckTemplate = await this.techCheckTemplateService.findOne(
-      createTechCheckDto.techCheckTemplateId,
-      techCheckerId,
-    );
+  public async createFromTemplate(createTechCheckDto: CreateTechCheckFromTemplateDto, techCheckerId: string): Promise<TechCheckEntity> {
+    const techCheckTemplate = await this.techCheckTemplateService.findOne(createTechCheckDto.techCheckTemplateId, techCheckerId);
 
     if (!techCheckTemplate) {
       throw new NotFoundException('Tech check template not found or you have no access');
@@ -55,10 +49,7 @@ export class TechCheckService {
     });
   }
 
-  public async findAll(
-    paginationDto: PaginationDto,
-    techCheckerId: string,
-  ): Promise<PaginationResponse<TechCheckViewEntity[]>> {
+  public async findAll(paginationDto: PaginationDto, techCheckerId: string): Promise<PaginationResponse<TechCheckViewEntity[]>> {
     const { skipTakeOptions } = paginationDto;
 
     const [data, total] = await this.dataSource.manager.findAndCount(TechCheckViewEntity, {
@@ -79,11 +70,7 @@ export class TechCheckService {
     });
   }
 
-  public async update(
-    id: string,
-    updateTechCheckDto: UpdateTechCheckFromTemplateDto,
-    techCheckerId: string,
-  ): Promise<UpdateResult> {
+  public async update(id: string, updateTechCheckDto: UpdateTechCheckFromTemplateDto, techCheckerId: string): Promise<UpdateResult> {
     const techCheck = await this.findOne(id, techCheckerId);
 
     if (!techCheck) {

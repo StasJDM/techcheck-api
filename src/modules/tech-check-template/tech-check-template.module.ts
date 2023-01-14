@@ -9,5 +9,6 @@ import { TechCheckTemplateQuestionEntity } from './entities/tech-check-template-
   imports: [TypeOrmModule.forFeature([TechCheckTemplateEntity, TechCheckTemplateQuestionEntity])],
   controllers: [TechCheckTemplateController],
   providers: [TechCheckTemplateService],
+  exports: [TechCheckTemplateService],
 })
 export class TechCheckTemplateModule {}

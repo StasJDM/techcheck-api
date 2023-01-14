@@ -1,6 +1,8 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { PaginationDto } from '../shared/dto/pagination.dto';
+import { PaginationResponse } from '../shared/types/pagination-response.type';
 import { CreateTechCheckTemplateDto } from './dto/create-tech-check-template.dto';
 import { UpdateTechCheckTemplateDto } from './dto/update-tech-check-template.dto';
 import { TechCheckTemplateQuestionEntity } from './entities/tech-check-template-question.entity';
@@ -33,8 +35,16 @@ export class TechCheckTemplateService {
     return techCheckTemplate;
   }
 
-  public findAll(ownerId: string): Promise<TechCheckTemplateEntity[]> {
-    return this.techCheckTemplateRepository.find({ where: { ownerId }, relations: ['questions'] });
+  public async findAll(ownerId: string, paginationDto: PaginationDto): Promise<PaginationResponse<TechCheckTemplateEntity[]>> {
+    const { skipTakeOptions } = paginationDto;
+
+    const [data, total] = await this.techCheckTemplateRepository.findAndCount({
+      where: { ownerId },
+      relations: ['questions'],
+      ...skipTakeOptions,
+    });
+
+    return { data, pagination: { ...paginationDto.params, total } };
   }
 
   public findOne(id: string, ownerId: string): Promise<TechCheckTemplateEntity> {

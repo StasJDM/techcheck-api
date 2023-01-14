@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards, Query } from '@nestjs/common';
 import { TechCheckTemplateService } from './tech-check-template.service';
 import { CreateTechCheckTemplateDto } from './dto/create-tech-check-template.dto';
 import { UpdateTechCheckTemplateDto } from './dto/update-tech-check-template.dto';
@@ -8,6 +8,8 @@ import { AppRequest } from '../shared/types/app-request.type';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AddQuestionToTechCheckTemplateDto } from './dto/add-question-to-tech-check-template.dto';
 import { RemoveQuestionFromTechCheckTemplateDto } from './dto/remove-question-from-tech-check-template.dto';
+import { PaginationResponse } from '../shared/types/pagination-response.type';
+import { PaginationDto } from '../shared/dto/pagination.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('tech-check-templates')
@@ -23,8 +25,11 @@ export class TechCheckTemplateController {
   }
 
   @Get()
-  public findAll(@Req() appRequest: AppRequest): Promise<TechCheckTemplateEntity[]> {
-    return this.techCheckTemplateService.findAll(appRequest.user.id);
+  public findAll(
+    @Req() appRequest: AppRequest,
+    @Query() paginationDto: PaginationDto,
+  ): Promise<PaginationResponse<TechCheckTemplateEntity[]>> {
+    return this.techCheckTemplateService.findAll(appRequest.user.id, paginationDto);
   }
 
   @Get(':id')
